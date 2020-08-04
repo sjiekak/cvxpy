@@ -95,6 +95,7 @@ class GUROBI(SCS):
         """Returns the solution to the original problem given the inverse_data.
         """
         status = solution['status']
+        attr = {s.EXTRA_STATS: solution['model']}
 
         primal_vars = None
         dual_vars = None
@@ -112,11 +113,11 @@ class GUROBI(SCS):
                     inverse_data[GUROBI.NEQ_CONSTR])
                 eq_dual.update(leq_dual)
                 dual_vars = eq_dual
-            return Solution(status, opt_val, primal_vars, dual_vars, {})
+            return Solution(status, opt_val, primal_vars, dual_vars, attr)
         else:
             return failure_solution(status)
 
-        return Solution(status, opt_val, primal_vars, dual_vars, {})
+        return Solution(status, opt_val, primal_vars, dual_vars, attr)
 
     def solve_via_data(self, data, warm_start, verbose, solver_opts, solver_cache=None):
         """Returns the result of the call to the solver.
@@ -234,6 +235,7 @@ class GUROBI(SCS):
                                                  s.SOLVER_ERROR)
         if solution["status"] == s.SOLVER_ERROR and model.SolCount:
             solution["status"] = s.OPTIMAL_INACCURATE
+        solution["model"] = model
 
         return solution
 

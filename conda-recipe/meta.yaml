@@ -1,6 +1,6 @@
 package:
   name: cvxpy
-  version: "1.0.31"
+  version: "1.0.31.extra_stats"
 
 source:
   path: ..
