@@ -65,6 +65,22 @@ class TestECOS(BaseTest):
         self.assertAlmostEqual(prob.value, 1.0)
         self.assertItemsAlmostEqual(self.x.value, [0, 0])
 
+    def test_ecos_bb_options(self):
+        """Test that all the ECOS BB solver options work.
+        """
+        # 'mi_maxiter'
+        # maximum number of branch and bound iterations (default: 1000)
+        # 'mi_abs_eps'
+        # absolute tolerance between upper and lower bounds (default: 1e-6)
+        # 'mi_rel_eps'
+        prob = cp.Problem(cp.Minimize(cp.norm(self.x, 1) + 1.0),
+                          [self.x == cp.Variable(2, boolean=True)])
+        for i in range(2):
+            prob.solve(solver=cp.ECOS_BB, mi_max_iters=100, mi_abs_eps=1e-6,
+                       mi_rel_eps=1e-5, verbose=True, warm_start=True)
+        self.assertAlmostEqual(prob.value, 1.0)
+        self.assertItemsAlmostEqual(self.x.value, [0, 0])
+
     def test_ecos_lp_0(self):
         StandardTestLPs.test_lp_0(solver='ECOS')
 

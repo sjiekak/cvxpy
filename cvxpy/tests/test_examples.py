@@ -283,6 +283,11 @@ class TestExamples(BaseTest):
         print("optimal value with ECOS:", prob.value)
         self.assertAlmostEqual(prob.value, 6)
 
+        # Solve with ECOS_BB.
+        prob.solve(solver=cvx.ECOS_BB)
+        print("optimal value with ECOS_BB:", prob.value)
+        self.assertAlmostEqual(prob.value, 6)
+
         # Solve with CVXOPT.
         if cvx.CVXOPT in cvx.installed_solvers():
             prob.solve(solver=cvx.CVXOPT)
@@ -615,6 +620,9 @@ class TestExamples(BaseTest):
         prob = cvx.Problem(cvx.Minimize(cvx.square(x)), [x == 2])
         # Get ECOS arguments.
         data, chain, inverse = prob.get_problem_data(cvx.ECOS)
+
+        # Get ECOS_BB arguments.
+        data, chain, inverse = prob.get_problem_data(cvx.ECOS_BB)
 
         # Get CVXOPT arguments.
         if cvx.CVXOPT in cvx.installed_solvers():

@@ -401,7 +401,7 @@ We will discuss the optional arguments in detail below.
 Choosing a solver
 ^^^^^^^^^^^^^^^^^
 
-CVXPY is distributed with the open source solvers `ECOS`_, `OSQP`_, and `SCS`_.
+CVXPY is distributed with the open source solvers `ECOS`_, `ECOS_BB`_, `OSQP`_, and `SCS`_.
 Many other solvers can be called by CVXPY if installed separately.
 The table below shows the types of problems the supported solvers can handle.
 
@@ -421,6 +421,8 @@ The table below shows the types of problems the supported solvers can handle.
 | `NAG`_       | X  | X  | X    |     |     |     |
 +--------------+----+----+------+-----+-----+-----+
 | `ECOS`_      | X  | X  | X    |     | X   |     |
++--------------+----+----+------+-----+-----+-----+
+| `ECOS_BB`_   | X  | X  | X    |     | X   | X   |	
 +--------------+----+----+------+-----+-----+-----+
 | `GUROBI`_    | X  | X  | X    |     |     | X   |
 +--------------+----+----+------+-----+-----+-----+
@@ -464,6 +466,10 @@ You can change the solver called by CVXPY using the ``solver`` keyword argument.
     # Solve with ECOS.
     prob.solve(solver=cp.ECOS)
     print("optimal value with ECOS:", prob.value)
+
+    # Solve with ECOS_BB.
+    prob.solve(solver=cp.ECOS_BB)
+    print("optimal value with ECOS_BB:", prob.value)
 
     # Solve with CVXOPT.
     prob.solve(solver=cp.CVXOPT)
@@ -513,6 +519,7 @@ You can change the solver called by CVXPY using the ``solver`` keyword argument.
 
     optimal value with OSQP: 6.0
     optimal value with ECOS: 5.99999999551
+    optimal value with ECOS_BB: 5.99999999551
     optimal value with CVXOPT: 6.00000000512
     optimal value with SCS: 6.00046055789
     optimal value with GLPK: 6.0
@@ -533,7 +540,7 @@ Use the ``installed_solvers`` utility function to get a list of the solvers your
 
 ::
 
-    ['CBC', 'CVXOPT', 'MOSEK', 'GLPK', 'GLPK_MI', 'ECOS', 'SCS', 'GUROBI', 'OSQP', 'CPLEX', 'NAG', 'SCIP', 'XPRESS']
+    ['CBC', 'CVXOPT', 'MOSEK', 'GLPK', 'GLPK_MI', 'ECOS_BB', 'ECOS', 'SCS', 'GUROBI', 'OSQP', 'CPLEX', 'NAG', 'SCIP', 'XPRESS']
 
 Viewing solver output
 ^^^^^^^^^^^^^^^^^^^^^
@@ -626,7 +633,7 @@ warm start would only be a good initial point.
 Setting solver options
 ----------------------
 
-The `OSQP`_, `ECOS`_, `MOSEK`_, `CBC`_, `CVXOPT`_, `NAG`_, and `SCS`_ Python interfaces allow you to set solver options such as the maximum number of iterations. You can pass these options along through CVXPY as keyword arguments.
+The `OSQP`_, `ECOS`_, `ECOS_BB`_, `MOSEK`_, `CBC`_, `CVXOPT`_, `NAG`_, and `SCS`_ Python interfaces allow you to set solver options such as the maximum number of iterations. You can pass these options along through CVXPY as keyword arguments.
 
 For example, here we tell SCS to use an indirect method for solving linear equations rather than a direct method.
 
@@ -706,6 +713,17 @@ For others see `OSQP documentation <http://osqp.org/docs/interfaces/solver_setti
 
 ``'feastol_inacc'``
     tolerance for feasibility condition for inaccurate solution (default: 1e-4).
+
+`ECOS_BB`_ options:
+
+``'mi_max_iters'``	
+    maximum number of branch and bound iterations (default: 1000)
+
+``'mi_abs_eps'``
+    absolute tolerance between upper and lower bounds (default: 1e-6)
+
+``'mi_rel_eps'``
+    relative tolerance, (U-L)/L, between upper and lower bounds (default: 1e-3)
 
 `MOSEK`_ options:
 
@@ -1319,6 +1337,7 @@ on derivatives.
 
 .. _CVXOPT: http://cvxopt.org/
 .. _ECOS: https://www.embotech.com/ECOS
+.. _ECOS_BB: https://github.com/embotech/ecos#mixed-integer-socps-ecos_bb
 .. _SCS: http://github.com/cvxgrp/scs
 .. _GLPK: https://www.gnu.org/software/glpk/
 .. _GLPK_MI: https://www.gnu.org/software/glpk/
